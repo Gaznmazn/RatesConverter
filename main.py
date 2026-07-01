@@ -8,17 +8,25 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QLineEdit, QPushButt
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self._setup_ui()
+        self._bind_signals()
+
+    def _setup_ui(self):
         self.ui = UiMainWindow()
         self.ui.setupUi(self)
 
-    def _setup_ui(self):
-        pass
-
     def _bind_signals(self):
-        pass
+        self.list_of_country()
 
     def closeEvent(self, event):
         pass
+
+    def list_of_country(self):
+        with open('data/rates.json') as data:
+            data = json.load(data)['rates']
+            course = [cour for cour in data.values()]
+            self.ui.combo_to.addItems([val for val in data.keys()])
+            self.ui.combo_from.addItems([val for val in data.keys()])
 
 
 if __name__ == '__main__':
