@@ -17,6 +17,7 @@ class MainWindow(QWidget):
 
     def _bind_signals(self):
         self.list_of_country()
+        self.ui.btn_swap.clicked.connect(self.click_on_reverse)
 
     def closeEvent(self, event):
         pass
@@ -27,6 +28,11 @@ class MainWindow(QWidget):
             course = [cour for cour in data.values()]
             self.ui.combo_to.addItems([val for val in data.keys()])
             self.ui.combo_from.addItems([val for val in data.keys()])
+
+    def click_on_reverse(self):
+        word = self.ui.combo_from.currentText()
+        self.ui.combo_from.setCurrentText(self.ui.combo_to.currentText())
+        self.ui.combo_to.setCurrentText(word)
 
 
 if __name__ == '__main__':
