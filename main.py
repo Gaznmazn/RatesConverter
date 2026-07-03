@@ -19,6 +19,7 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
         self.ui.input_amount.setMinimum(0.0)
         self.ui.input_amount.setMaximum(9999999999999999999999999999999999999999999999.0)
+        self.ui.input_amount.setSpecialValueText(' ')
 
     def _bind_signals(self):
         self._data_layer()
