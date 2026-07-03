@@ -1,7 +1,10 @@
 import sys
+import os
 import json
-from ui_converter import UiMainWindow
-from PyQt6.QtWidgets import (QApplication, QWidget)
+from ui_converter import Ui_main_window
+from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtGui import QPixmap
+from PIL import Image, ImageQt
 
 
 class MainWindow(QWidget):
@@ -12,7 +15,7 @@ class MainWindow(QWidget):
         self._bind_signals()
 
     def _setup_ui(self):
-        self.ui = UiMainWindow()
+        self.ui = Ui_main_window()
         self.ui.setupUi(self)
         self.ui.input_amount.setMinimum(0.0)
         self.ui.input_amount.setMaximum(9999999999999999999999999999999999999999999999.0)
@@ -40,9 +43,25 @@ class MainWindow(QWidget):
         self.ui.combo_to.setCurrentText(word)
 
     def _logic(self):
-        image_path = ''
         currency_from = self.ui.combo_from.currentText()
         currency_to = self.ui.combo_to.currentText()
+        image_path_from = f'{os.path.join(os.path.dirname(__file__), "assets", f"{currency_from.lower()}.png")}'
+        image_path_to = f'{os.path.join(os.path.dirname(__file__), "assets", f"{currency_to.lower()}.png")}'
+
+        if os.path.exists(image_path_from):
+            image_from = Image.open(image_path_from).resize((32, 32))
+            image_from_pixmap = QPixmap.fromImage(ImageQt.ImageQt(image_from))
+            self.ui.label_icon_from.setPixmap(image_from_pixmap)
+        else:
+            self.ui.label_icon_from.clear()
+
+        if os.path.exists(image_path_to):
+            image_to = Image.open(image_path_to).resize((32, 32))
+            image_to_pixmap = QPixmap.fromImage(ImageQt.ImageQt(image_to))
+            self.ui.label_icon_to.setPixmap(image_to_pixmap)
+        else:
+            self.ui.label_icon_to.clear()
+
         amount = self.ui.input_amount.value()
         rate = (1 / self.rates[currency_from]) * self.rates[currency_to]
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>313</width>
-    <height>279</height>
+    <width>389</width>
+    <height>209</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -90,7 +90,7 @@ QPushButton:pressed {
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>Конвентор Валют</string>
+      <string>Конвертер Валют</string>
      </property>
      <property name="textFormat">
       <enum>Qt::PlainText</enum>
@@ -121,6 +121,19 @@ QPushButton:pressed {
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_icon_from">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QComboBox" name="combo_from">
        <property name="maximumSize">
@@ -154,6 +167,19 @@ QPushButton:pressed {
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="label_icon_to">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -180,25 +206,6 @@ QPushButton:pressed {
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="btn_update">
-     <property name="maximumSize">
-      <size>
-       <width>90</width>
-       <height>40</height>
-      </size>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Update</string>
      </property>
     </widget>
    </item>
