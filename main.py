@@ -1,10 +1,12 @@
 import sys
 import os
 import json
-from ui_converter import Ui_main_window
+
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtGui import QPixmap
 from PIL import Image, ImageQt
+
+from ui_converter import Ui_main_window
 
 
 class MainWindow(QWidget):
@@ -18,7 +20,7 @@ class MainWindow(QWidget):
         self.ui = Ui_main_window()
         self.ui.setupUi(self)
         self.ui.input_amount.setMinimum(0.0)
-        self.ui.input_amount.setMaximum(9999999999999999999999999999999999999999999999.0)
+        self.ui.input_amount.setMaximum(9.9e45)
         self.ui.input_amount.setSpecialValueText(' ')
 
     def _bind_signals(self):
@@ -46,8 +48,8 @@ class MainWindow(QWidget):
     def _logic(self):
         currency_from = self.ui.combo_from.currentText()
         currency_to = self.ui.combo_to.currentText()
-        image_path_from = f'{os.path.join(os.path.dirname(__file__), "assets", f"{currency_from.lower()}.png")}'
-        image_path_to = f'{os.path.join(os.path.dirname(__file__), "assets", f"{currency_to.lower()}.png")}'
+        image_path_from = os.path.join(os.path.dirname(__file__), "assets", f"{currency_from.lower()}.png")
+        image_path_to = os.path.join(os.path.dirname(__file__), "assets", f"{currency_to.lower()}.png")
 
         if os.path.exists(image_path_from):
             image_from = Image.open(image_path_from).resize((32, 32))
