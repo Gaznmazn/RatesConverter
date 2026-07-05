@@ -21,5 +21,3 @@ __pycache__/
 # Системные файлы
 .DS_Store
 Thumbs.db
-
-ui_*.py
