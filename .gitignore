@@ -12,7 +12,6 @@ __pycache__/
 # Базы данных
 *.db
 *.sqlite3
-data/*.json
 
 # Настройки IDE
 .idea/

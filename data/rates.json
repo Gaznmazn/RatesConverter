@@ -1,0 +1,21 @@
+{
+    "result": "success",
+    "provider": "https://www.exchangerate-api.com",
+    "documentation": "https://www.exchangerate-api.com/docs/free",
+    "terms_of_use": "https://www.exchangerate-api.com/terms",
+    "time_last_update_unix": 1782950551,
+    "time_last_update_utc": "Thu, 02 Jul 2026 00:02:31 +0000",
+    "time_next_update_unix": 1783038221,
+    "time_next_update_utc": "Fri, 03 Jul 2026 00:23:41 +0000",
+    "time_eol_unix": 0,
+    "base_code": "USD",
+    "rates": {
+        "USD": 1,
+        "BYN": 2.911522,
+        "EUR": 0.878331,
+        "GBP": 0.753734,
+        "JPY": 162.547842,
+        "KZT": 479.272246,
+        "RUB": 77.899758
+    }
+}

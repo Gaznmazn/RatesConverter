@@ -35,10 +35,10 @@ class MainWindow(QWidget):
         event.accept()
 
     def _data_layer(self):
-        with open('data/rates.json') as data:
+        with open(os.path.join(os.path.dirname(__file__), 'data', 'rates.json')) as data:
             self.rates = json.load(data)['rates']
-        self.ui.combo_to.addItems([val for val in self.rates.keys()])
-        self.ui.combo_from.addItems([val for val in self.rates.keys()])
+        self.ui.combo_to.addItems(self.rates.keys())
+        self.ui.combo_from.addItems(self.rates.keys())
 
     def click_on_reverse(self):
         word = self.ui.combo_from.currentText()
@@ -65,12 +65,16 @@ class MainWindow(QWidget):
         else:
             self.ui.label_icon_to.clear()
 
-        amount = self.ui.input_amount.value()
-        rate = (1 / self.rates[currency_from]) * self.rates[currency_to]
+        if currency_to in self.rates and currency_from in self.rates:
 
-        if amount >= 0 and rate > 0:
-            result = amount * rate
-            self.ui.label_result.setText(f'{result:.2f}'.replace('.', ','))
+            amount = self.ui.input_amount.value()
+            rate = (1 / self.rates[currency_from]) * self.rates[currency_to]
+
+            if amount >= 0 and rate > 0:
+                result = amount * rate
+                self.ui.label_result.setText(f'{result:.2f}'.replace('.', ','))
+            else:
+                self.ui.label_result.setText("0,00")
         else:
             self.ui.label_result.setText("0,00")
 
