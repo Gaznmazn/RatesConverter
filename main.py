@@ -2,7 +2,7 @@ import sys
 import os
 import json
 
-from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtWidgets import QApplication, QWidget, QMessageBox
 from PyQt6.QtGui import QPixmap
 from PIL import Image, ImageQt
 
@@ -13,6 +13,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.rates = None
+        self.reply = None
         self._setup_ui()
         self._bind_signals()
 
@@ -32,11 +33,20 @@ class MainWindow(QWidget):
         self._logic()
 
     def closeEvent(self, event):
-        event.accept()
+        self.reply = QMessageBox.question(self, 'EXIT', 'Are you sure?',
+                                          (QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No))
+        if self.reply == QMessageBox.StandardButton.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
     def _data_layer(self):
-        with open(os.path.join(os.path.dirname(__file__), 'data', 'rates.json')) as data:
-            self.rates = json.load(data)['rates']
+        try:
+            with open(os.path.join(os.path.dirname(__file__), 'data', 'rates.json')) as data:
+                self.rates = json.load(data)['rates']
+        except FileNotFoundError:
+            QMessageBox.critical(self, 'Critical ERROR', 'rates.json is not found')
+            sys.exit()
         self.ui.combo_to.addItems(self.rates.keys())
         self.ui.combo_from.addItems(self.rates.keys())
 
