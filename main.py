@@ -3,39 +3,51 @@ import os
 import json
 
 from PyQt6.QtWidgets import QApplication, QWidget, QMessageBox
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QShortcut
+from PyQt6.QtCore import QSettings
 from PIL import Image, ImageQt
 
-from ui_converter import Ui_main_window
+from ui_converter import UiMainWindow
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.settings = QSettings("MyApp", "RatesConverter")
         self.rates = None
         self.reply = None
         self._setup_ui()
         self._bind_signals()
+        self.theme_now = 'black'
 
     def _setup_ui(self):
-        self.ui = Ui_main_window()
+        self.ui = UiMainWindow()
         self.ui.setupUi(self)
+        geometry = self.settings.value("window_geometry")
+        if geometry:
+            self.restoreGeometry(geometry)
         self.ui.input_amount.setMinimum(0.0)
         self.ui.input_amount.setMaximum(9.9e45)
         self.ui.input_amount.setSpecialValueText(' ')
 
     def _bind_signals(self):
         self._data_layer()
+
         self.ui.btn_swap.clicked.connect(self.click_on_reverse)
         self.ui.combo_from.currentTextChanged.connect(self._logic)
         self.ui.combo_to.currentTextChanged.connect(self._logic)
         self.ui.input_amount.valueChanged.connect(self._logic)
         self._logic()
 
+        self.ui.btn_swap.setShortcut('Space')
+        shortcut_theme = QShortcut("Ctrl+T", self)
+        shortcut_theme.activated.connect(self._toggle_theme)  
+
     def closeEvent(self, event):
         self.reply = QMessageBox.question(self, 'EXIT', 'Are you sure?',
                                           (QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No))
         if self.reply == QMessageBox.StandardButton.Yes:
+            self.settings.setValue("window_geometry", self.saveGeometry())
             event.accept()
         else:
             event.ignore()
@@ -87,6 +99,28 @@ class MainWindow(QWidget):
                 self.ui.label_result.setText("0,00")
         else:
             self.ui.label_result.setText("0,00")
+
+    def _apply_theme(self):
+        if self.theme_now == 'white':
+            try:
+                with open(os.path.join(os.path.dirname(__file__), 'data', 'light_theme.css'), 'r') as theme:
+                    self.setStyleSheet(theme.read())
+            except FileNotFoundError:
+                QMessageBox.warning(self, 'Warning', 'light_theme.css is not found')
+        else:
+            try:
+                with open(os.path.join(os.path.dirname(__file__), 'data', 'black_theme.css'), 'r') as theme:
+                    self.setStyleSheet(theme.read())
+            except FileNotFoundError:
+                QMessageBox.warning(self, 'Warning', 'black_theme.css is not found')
+
+    def _toggle_theme(self):
+        if self.theme_now == 'black':
+            self.theme_now = 'white'
+            self._apply_theme()
+        else:
+            self.theme_now = 'black'
+            self._apply_theme()
 
 
 if __name__ == '__main__':

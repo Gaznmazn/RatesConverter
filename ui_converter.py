@@ -9,7 +9,20 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-class Ui_main_window(object):
+class UiMainWindow(object):
+    def __init__(self):
+        self.label_result = None
+        self.label_icon_to = None
+        self.combo_to = None
+        self.btn_swap = None
+        self.combo_from = None
+        self.combo_from = None
+        self.label_icon_from = None
+        self.horizontalLayout_3 = None
+        self.input_amount = None
+        self.label_title = None
+        self.verticalLayout = None
+
     def setupUi(self, main_window):
         main_window.setObjectName("main_window")
         main_window.resize(389, 209)

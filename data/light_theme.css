@@ -1,0 +1,60 @@
+QWidget {
+    background-color: #f4f4f5;
+    color: #09090b;
+    font-family: "Segoe UI", sans-serif;
+}
+
+QLabel#label_title {
+    color: #27272a;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+QLabel {
+    font-size: 16px;
+    font-weight: 500;
+    color: #27272a;
+}
+
+QLabel#label_result {
+    font-size: 36px;
+    font-weight: bold;
+    color: #3b82f6; /* Приятный синий акцент */
+}
+
+QDoubleSpinBox, QComboBox {
+    background-color: #ffffff;
+    border: 2px solid #e4e4e7;
+    border-radius: 12px;
+    padding: 10px 15px;
+    color: #09090b;
+    font-size: 16px;
+}
+
+QDoubleSpinBox:focus, QComboBox:focus {
+    border: 2px solid #3b82f6; /* Синяя рамка при выделении */
+    background-color: #ffffff;
+}
+
+QComboBox::drop-down {
+    border: none;
+    padding-right: 10px;
+}
+
+QPushButton {
+    background-color: #3b82f6; /* Синяя кнопка */
+    border: none;
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 12px;
+}
+
+QPushButton:hover {
+    background-color: #2563eb; /* Чуть темнее при наведении */
+}
+
+QPushButton:pressed {
+    background-color: #1d4ed8; /* Еще темнее при нажатии */
+}
