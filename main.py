@@ -16,22 +16,30 @@ class MainWindow(QWidget):
         self.settings = QSettings("MyApp", "RatesConverter")
         self.rates = None
         self.reply = None
+        self.theme_now = 'black'
         self._setup_ui()
         self._bind_signals()
-        self.theme_now = 'black'
+        self._apply_theme()
 
     def _setup_ui(self):
         self.ui = UiMainWindow()
         self.ui.setupUi(self)
         geometry = self.settings.value("window_geometry")
+        self.theme_now = self.settings.value('window_theme')
         if geometry:
             self.restoreGeometry(geometry)
+
         self.ui.input_amount.setMinimum(0.0)
         self.ui.input_amount.setMaximum(9.9e45)
         self.ui.input_amount.setSpecialValueText(' ')
 
     def _bind_signals(self):
         self._data_layer()
+        saved_from = self.settings.value('currency_from', 'USD')
+        saved_to = self.settings.value('currency_to', 'USD')
+        print(saved_from)
+        self.ui.combo_from.setCurrentText(saved_from)
+        self.ui.combo_to.setCurrentText(saved_to)
 
         self.ui.btn_swap.clicked.connect(self.click_on_reverse)
         self.ui.combo_from.currentTextChanged.connect(self._logic)
@@ -39,15 +47,18 @@ class MainWindow(QWidget):
         self.ui.input_amount.valueChanged.connect(self._logic)
         self._logic()
 
-        self.ui.btn_swap.setShortcut('Space')
+        self.ui.btn_swap.setShortcut('Ctrl+R')
         shortcut_theme = QShortcut("Ctrl+T", self)
-        shortcut_theme.activated.connect(self._toggle_theme)  
+        shortcut_theme.activated.connect(self._toggle_theme)
 
     def closeEvent(self, event):
         self.reply = QMessageBox.question(self, 'EXIT', 'Are you sure?',
                                           (QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No))
         if self.reply == QMessageBox.StandardButton.Yes:
-            self.settings.setValue("window_geometry", self.saveGeometry())
+            self.settings.setValue('window_theme', self.theme_now)
+            self.settings.setValue('currency_from', self.ui.combo_from.currentText())
+            self.settings.setValue('currency_to', self.ui.combo_to.currentText())
+            self.settings.setValue('window_geometry', self.saveGeometry())
             event.accept()
         else:
             event.ignore()
@@ -74,16 +85,18 @@ class MainWindow(QWidget):
         image_path_to = os.path.join(os.path.dirname(__file__), "assets", f"{currency_to.lower()}.png")
 
         if os.path.exists(image_path_from):
-            image_from = Image.open(image_path_from).resize((32, 32))
-            image_from_pixmap = QPixmap.fromImage(ImageQt.ImageQt(image_from))
-            self.ui.label_icon_from.setPixmap(image_from_pixmap)
+            with Image.open(image_path_from) as img_from:
+                image_from = img_from.resize((32, 32))
+                qimage_from = ImageQt.ImageQt(image_from)
+                self.ui.label_icon_from.setPixmap(QPixmap.fromImage(qimage_from))
         else:
             self.ui.label_icon_from.clear()
 
         if os.path.exists(image_path_to):
-            image_to = Image.open(image_path_to).resize((32, 32))
-            image_to_pixmap = QPixmap.fromImage(ImageQt.ImageQt(image_to))
-            self.ui.label_icon_to.setPixmap(image_to_pixmap)
+            with Image.open(image_path_to) as img_to:
+                image_to = img_to.resize((32, 32))
+                qimage_to = ImageQt.ImageQt(image_to)
+                self.ui.label_icon_to.setPixmap(QPixmap.fromImage(qimage_to))
         else:
             self.ui.label_icon_to.clear()
 
@@ -123,8 +136,12 @@ class MainWindow(QWidget):
             self._apply_theme()
 
 
-if __name__ == '__main__':
+def main():
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main()
