@@ -11,11 +11,11 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 class UiMainWindow(object):
     def __init__(self):
+        self.update_btn = None
         self.label_result = None
         self.label_icon_to = None
         self.combo_to = None
         self.btn_swap = None
-        self.combo_from = None
         self.combo_from = None
         self.label_icon_from = None
         self.horizontalLayout_3 = None
@@ -25,7 +25,7 @@ class UiMainWindow(object):
 
     def setupUi(self, main_window):
         main_window.setObjectName("main_window")
-        main_window.resize(389, 209)
+        main_window.resize(348, 259)
         main_window.setStyleSheet("QWidget {\n"
                                   "    background-color: #09090b; \n"
                                   "    color: #ffffff;\n"
@@ -144,6 +144,11 @@ class UiMainWindow(object):
         self.label_result.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.label_result.setObjectName("label_result")
         self.verticalLayout.addWidget(self.label_result)
+        self.update_btn = QtWidgets.QPushButton(parent=main_window)
+        self.update_btn.setMinimumSize(QtCore.QSize(80, 0))
+        self.update_btn.setMaximumSize(QtCore.QSize(128, 16777215))
+        self.update_btn.setObjectName("update_btn")
+        self.verticalLayout.addWidget(self.update_btn)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
                                            QtWidgets.QSizePolicy.Policy.Expanding)
         self.verticalLayout.addItem(spacerItem)
@@ -157,3 +162,15 @@ class UiMainWindow(object):
         self.label_title.setText(_translate("main_window", "Конвертер Валют"))
         self.btn_swap.setText(_translate("main_window", "Reverse"))
         self.label_result.setText(_translate("main_window", "TextLabel"))
+        self.update_btn.setText(_translate("main_window", "Update"))
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    main_window = QtWidgets.QWidget()
+    ui = Ui_main_window()
+    ui.setupUi(main_window)
+    main_window.show()
+    sys.exit(app.exec())

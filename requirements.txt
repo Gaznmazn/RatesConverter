@@ -1,2 +1,4 @@
 PyQt6
 Pillow>=10.0.0
+httpx
+qasync

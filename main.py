@@ -1,11 +1,14 @@
 import sys
 import os
 import json
+import asyncio
 
+import httpx
 from PyQt6.QtWidgets import QApplication, QWidget, QMessageBox
 from PyQt6.QtGui import QPixmap, QShortcut
 from PyQt6.QtCore import QSettings
 from PIL import Image, ImageQt
+from qasync import QEventLoop, asyncSlot
 
 from ui_converter import UiMainWindow
 
@@ -45,6 +48,7 @@ class MainWindow(QWidget):
         self.ui.combo_from.currentTextChanged.connect(self._logic)
         self.ui.combo_to.currentTextChanged.connect(self._logic)
         self.ui.input_amount.valueChanged.connect(self._logic)
+        self.ui.update_btn.clicked.connect(self.update_data)
         self._logic()
 
         self.ui.btn_swap.setShortcut('Ctrl+R')
@@ -70,7 +74,9 @@ class MainWindow(QWidget):
         except FileNotFoundError:
             QMessageBox.critical(self, 'Critical ERROR', 'rates.json is not found')
             sys.exit()
+        self.ui.combo_to.clear()
         self.ui.combo_to.addItems(self.rates.keys())
+        self.ui.combo_from.clear()
         self.ui.combo_from.addItems(self.rates.keys())
 
     def click_on_reverse(self):
@@ -135,12 +141,30 @@ class MainWindow(QWidget):
             self.theme_now = 'black'
             self._apply_theme()
 
+    @asyncSlot()
+    async def update_data(self):
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                response = await client.get('https://open.er-api.com/v6/latest/USD')
+                if response.status_code == 200:
+                    json_docx = response.json()
+                    with open(os.path.join(os.path.dirname(__file__), 'data', 'rates.json'), 'w') as data:
+                        json.dump(json_docx, data, indent=4, ensure_ascii=False)
+            self._data_layer()
+        except Exception as e:
+            QMessageBox.warning(self, 'Ошибка обновления', f'Не удалось обновить курсы: {e}')
+
 
 def main():
     app = QApplication(sys.argv)
+
+    loop = QEventLoop(app)
+    asyncio.set_event_loop(loop)
+
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())
+    with loop:
+        loop.run_forever()
 
 
 if __name__ == '__main__':
